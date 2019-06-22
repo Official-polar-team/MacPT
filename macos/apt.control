@@ -1,0 +1,26 @@
+Package: apt
+Version: 
+Architecture: darwin-amd64
+Maintainer: APT Development Team <deity@lists.debian.org>
+Recommends: ca-certificates
+Depends: gettext, gnupg, libgnutls30 (>= 3.6.6), serna-archive-keyring, dpkg, liblz4
+Suggests: apt-doc, aptitude | synaptic | wajig, dpkg-dev (>= 1.17.2), gnupg | gnupg2 | gnupg1, powermgmt-base
+Breaks: apt-transport-https (<< 1.5~alpha4~), apt-utils (<< 1.3~exp2~), aptitude (<< 0.8.10)
+Replaces: apt-transport-https (<< 1.5~alpha4~), apt-utils (<< 1.3~exp2~)
+Provides: apt-transport-https
+Section: admin
+Priority: important
+Description: commandline package manager
+ This package provides commandline tools for searching and
+ managing as well as querying information about packages
+ as a low-level access to all features of the libapt-pkg library.
+ .
+ These include:
+  * apt-get for retrieval of packages and information about them
+    from authenticated sources and for installation, upgrade and
+    removal of packages together with their dependencies
+  * apt-cache for querying available information about installed
+    as well as installable packages
+  * apt-cdrom to use removable media as a source for packages
+  * apt-config as an interface to the configuration settings
+  * apt-key as an interface to manage authentication keys
