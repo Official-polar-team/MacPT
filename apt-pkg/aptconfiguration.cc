@@ -52,7 +52,7 @@ static void setDefaultConfigurationForCompressors() {
 			_config->Set("APT::Compressor::lzma::UncompressArg::", "-d");
 		}
 	} else {
-		_config->CndSet("Dir::Bin::lzma", "/usr/bin/lzma");
+		_config->CndSet("Dir::Bin::lzma", "/usr/local/bin/lzma");
 		if (_config->Exists("APT::Compressor::lzma::CompressArg") == false) {
 			_config->Set("APT::Compressor::lzma::CompressArg::", "--suffix=");
 			_config->Set("APT::Compressor::lzma::CompressArg::", "-6");
