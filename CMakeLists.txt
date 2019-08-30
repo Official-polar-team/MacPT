@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.4.0)
 include_directories(${PROJECT_BINARY_DIR}/include)
 
 
-enable_testing()
+# enable_testing()
 
 option(WITH_DOC "Build documentation." ON)
 option(USE_NLS "Localisation support." ON)
@@ -21,7 +21,7 @@ set(CMAKE_EXE_LINKER_FLAGS_COVERAGE "-lgcov")
 set(CMAKE_SHARED_LINKER_FLAGS_COVERAGE "-lgcov")
 
 # Work around bug in GNUInstallDirs
-if (EXISTS "/etc/debian_version")
+if (EXISTS "/usr/local/etc/debian_version")
   set(CMAKE_INSTALL_LIBEXECDIR "lib")
 endif()
 

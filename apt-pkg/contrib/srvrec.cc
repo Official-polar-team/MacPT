@@ -11,6 +11,7 @@
 #include <netdb.h>
 
 #include <arpa/nameser.h>
+#include <apt-pkg/nameser_compat.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <resolv.h>
@@ -24,6 +25,20 @@
 #include <apt-pkg/strutl.h>
 
 #include "srvrec.h"
+
+#define fp_nquery         res_9_fp_nquery
+#define fp_query          res_9_fp_query
+#define hostalias         res_9_hostalias_1
+#define p_query           res_9_p_query
+#define res_close         res_9_close
+#define res_init          res_9_init
+#define res_isourserver   res_9_isourserver
+#define res_mkquery       res_9_mkquery
+#define res_query         res_9_query
+#define res_querydomain   res_9_querydomain
+#define res_search        res_9_search
+#define res_send          res_9_send
+#define res_sendsigned    res_9_sendsigned
 
 bool SrvRec::operator==(SrvRec const &other) const
 {

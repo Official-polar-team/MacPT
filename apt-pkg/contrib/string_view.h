@@ -12,6 +12,7 @@
 #if !defined(APT_STRINGVIEW_H)
 #define APT_STRINGVIEW_H
 #include <apt-pkg/macros.h>
+#include <apt-pkg/missing.h>
 #include <string>
 #include <string.h>
 

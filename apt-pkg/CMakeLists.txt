@@ -37,7 +37,7 @@ file(GLOB_RECURSE headers "*.h")
 
 # Create a library using the C++ files
 add_library(apt-pkg SHARED ${library})
-add_dependencies(apt-pkg apt-pkg-versionscript)
+
 # Link the library and set the SONAME
 target_include_directories(apt-pkg
                            PRIVATE ${ZLIB_INCLUDE_DIRS}
@@ -64,7 +64,6 @@ target_link_libraries(apt-pkg
 )
 set_target_properties(apt-pkg PROPERTIES VERSION ${MAJOR}.${MINOR})
 set_target_properties(apt-pkg PROPERTIES SOVERSION ${MAJOR})
-add_version_script(apt-pkg)
 
 # Install the library and the header files
 install(TARGETS apt-pkg LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})

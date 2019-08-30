@@ -16,7 +16,6 @@ target_link_libraries(apt-private PUBLIC apt-pkg)
 set_target_properties(apt-private PROPERTIES VERSION ${MAJOR}.${MINOR})
 set_target_properties(apt-private PROPERTIES SOVERSION ${MAJOR})
 set_target_properties(apt-private PROPERTIES CXX_VISIBILITY_PRESET hidden)
-add_version_script(apt-private)
 
 # Install the library and the headers
 install(TARGETS apt-private

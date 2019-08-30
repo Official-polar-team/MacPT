@@ -7,13 +7,13 @@ TEXTDOMAIN="apt"
 # Get the configuration from /etc/apt/apt.conf
 CLEAN="prompt"
 OPTS=""
-APTGET="/usr/bin/apt-get"
-APTCACHE="/usr/bin/apt-cache"
-DPKG="/usr/bin/dpkg"
+APTGET="/usr/local/bin/apt-get"
+APTCACHE="/usr/local/bin/apt-cache"
+DPKG="/usr/local/bin/dpkg"
 DPKG_OPTS="--admindir=$1"
 APT_OPT0="-oDir::State::status=$1/status"
 APT_OPT1="-oDPkg::Options::=$DPKG_OPTS"
-CACHEDIR="/var/cache/apt"
+CACHEDIR="/usr/local/var/cache/apt"
 PROMPT="false"
 RES=`apt-config shell CLEAN DSelect::Clean OPTS DSelect::UpdateOptions \
 		      DPKG Dir::Bin::dpkg/f APTGET Dir::Bin::apt-get/f \

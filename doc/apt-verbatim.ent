@@ -1,12 +1,12 @@
 <!-- -*- mode: xml; mode: fold -*- -->
 
 <!-- Some common paths.. -->
-<!ENTITY docdir "/usr/share/doc/apt/">
-<!ENTITY guidesdir "/usr/share/doc/apt-doc/">
+<!ENTITY docdir "/usr/local/share/doc/apt/">
+<!ENTITY guidesdir "/usr/local/share/doc/apt-doc/">
 <!ENTITY configureindex "<filename>&docdir;examples/configure-index.gz</filename>">
-<!ENTITY aptconfdir "<filename>/etc/apt.conf</filename>">
-<!ENTITY statedir "/var/lib/apt">
-<!ENTITY cachedir "/var/cache/apt">
+<!ENTITY aptconfdir "<filename>/usr/local/etc/apt.conf</filename>">
+<!ENTITY statedir "/usr/local/var/lib/apt">
+<!ENTITY cachedir "/usr/local/var/cache/apt">
 
 <!-- Cross references to other man pages -->
 <!ENTITY apt-conf "<citerefentry>
@@ -225,7 +225,7 @@
   </citerefentry>"
 >
 
-<!ENTITY apt-acquire-additional-files "<literal><filename>/usr/share/doc/apt-doc/acquire-additional-files.md.gz</filename></literal>">
+<!ENTITY apt-acquire-additional-files "<literal><filename>/usr/local/share/doc/apt-doc/acquire-additional-files.md.gz</filename></literal>">
 
 <!-- Boiler plate docinfo section -->
 <!ENTITY apt-email "
@@ -276,6 +276,7 @@
 <!ENTITY debian-testing-codename "bullseye">
 <!ENTITY debian-stable-version "10">
 <!ENTITY ubuntu-codename "disco">
+<!ENTITY macos-codename "georgia">
 
 <!-- good and bad just refers to matching and not matching a pattern…
      It is not a remark about the specific perl version.
