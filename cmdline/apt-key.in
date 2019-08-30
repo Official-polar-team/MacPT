@@ -73,7 +73,7 @@ create_gpg_home() {
 	    unset TMPDIR
 	fi
     fi
-    GPGHOMEDIR="$(mktemp --directory --tmpdir 'apt-key-gpghome.XXXXXXXXXX')"
+    GPGHOMEDIR="$(gmktemp --directory --tmpdir 'apt-key-gpghome.XXXXXXXXXX')"
     CURRENTTRAP="${CURRENTTRAP} cleanup_gpg_home;"
     trap "${CURRENTTRAP}" 0 HUP INT QUIT ILL ABRT FPE SEGV PIPE TERM
     if [ -z "$GPGHOMEDIR" ]; then
@@ -204,15 +204,15 @@ net_update() {
 	apt_error 'wget is required for a network-based update, but it is not installed'
 	exit 1
     fi
-    if [ ! -d "${APT_DIR}/var/lib/apt/keyrings" ]; then
-	mkdir -p "${APT_DIR}/var/lib/apt/keyrings"
+    if [ ! -d "${APT_DIR}/usr/local/var/lib/apt/keyrings" ]; then
+	mkdir -p "${APT_DIR}/usr/local/var/lib/apt/keyrings"
     fi
-    keyring="${APT_DIR}/var/lib/apt/keyrings/$(basename "$ARCHIVE_KEYRING_URI")"
+    keyring="${APT_DIR}/usr/local/var/lib/apt/keyrings/$(basename "$ARCHIVE_KEYRING_URI")"
     old_mtime=0
     if [ -e $keyring ]; then
 	old_mtime=$(stat -c %Y "$keyring")
     fi
-    (cd  "${APT_DIR}/var/lib/apt/keyrings"; wget --timeout=90 -q -N "$ARCHIVE_KEYRING_URI")
+    (cd  "${APT_DIR}/usr/local/var/lib/apt/keyrings"; wget --timeout=90 -q -N "$ARCHIVE_KEYRING_URI")
     if [ ! -e "$keyring" ]; then
 	return
     fi
@@ -287,7 +287,7 @@ remove_key_from_keyring() {
 	# we can't just modify pointed to files as these might be in /usr or something
 	local REALTARGET
 	if [ -L "$DEARMOR" ]; then
-	    REALTARGET="$(readlink -f "$DEARMOR")"
+	    REALTARGET="$(greadlink -f "$DEARMOR")"
 	    mv -f "$DEARMOR" "${DEARMOR}.dpkg-tmp"
 	    cp -a "$REALTARGET" "$DEARMOR"
 	fi
@@ -356,10 +356,10 @@ foreach_keyring_do() {
 	if accessible_file_exists "$TRUSTEDFILE" && is_supported_keyring "$TRUSTEDFILE"; then
 	    $ACTION "$TRUSTEDFILE" "$@"
 	fi
-	local TRUSTEDPARTS="/etc/apt/trusted.gpg.d"
+	local TRUSTEDPARTS="/usr/local/etc/apt/trusted.gpg.d"
 	eval "$(apt-config shell TRUSTEDPARTS Dir::Etc::TrustedParts/d)"
 	if [ -d "$TRUSTEDPARTS" ]; then
-	    TRUSTEDPARTS="$(readlink -f "$TRUSTEDPARTS")"
+	    TRUSTEDPARTS="$(greadlink -f "$TRUSTEDPARTS")"
 	    local TRUSTEDPARTSLIST="$(cd /; find "$TRUSTEDPARTS" -mindepth 1 -maxdepth 1 \( -name '*.gpg' -o -name '*.asc' \))"
 	    for trusted in $(echo "$TRUSTEDPARTSLIST" | sort); do
 		if accessible_file_exists "$trusted" && is_supported_keyring "$trusted"; then
@@ -487,7 +487,7 @@ merge_all_trusted_keyrings_into_pubring() {
     # does the same as:
     # foreach_keyring_do 'import_keys_from_keyring' "${GPGHOMEDIR}/pubring.gpg"
     # but without using gpg, just cat and find
-    local PUBRING="$(readlink -f "${GPGHOMEDIR}")/pubring.gpg"
+    local PUBRING="$(greadlink -f "${GPGHOMEDIR}")/pubring.gpg"
     rm -f "$PUBRING"
     touch "$PUBRING"
     foreach_keyring_do 'catfile' "$PUBRING"
@@ -653,7 +653,7 @@ while [ -n "$1" ]; do
 done
 
 if [ -z "$TRUSTEDFILE" ]; then
-   TRUSTEDFILE="/etc/apt/trusted.gpg"
+   TRUSTEDFILE="/usr/local/etc/apt/trusted.gpg"
    eval $(apt-config shell TRUSTEDFILE Apt::GPGV::TrustedKeyring)
    eval $(apt-config shell TRUSTEDFILE Dir::Etc::Trusted/f)
 fi

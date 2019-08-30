@@ -25,6 +25,9 @@
 
 
 find_path(DOCBOOK_XSL manpages/docbook.xsl
+         # MacOS
+         /usr/local/share/xml/docbook/stylesheet/docbook-xsl
+         /usr/local/share/xml/docbook/stylesheet/nwalsh
          # Debian
          /usr/share/xml/docbook/stylesheet/docbook-xsl
          /usr/share/xml/docbook/stylesheet/nwalsh

@@ -2013,7 +2013,7 @@ EXTERNAL_PAGES         = YES
 # interpreter (i.e. the result of 'which perl').
 # The default file (with absolute path) is: /usr/bin/perl.
 
-PERL_PATH              = /usr/bin/perl
+PERL_PATH              = /usr/local/bin/perl
 
 #---------------------------------------------------------------------------
 # Configuration options related to the dot tool

@@ -1,7 +1,7 @@
 #!/bin/sh
 # small helper to extract information form *.ent files
 
-BASEDIR="$(readlink -f "$(dirname $0)")"
+BASEDIR="$(greadlink -f "$(dirname $0)")"
 
 getcurrent() {
 	# search for an exact match to use the correct sources.list example
@@ -42,7 +42,7 @@ if [ "$1" = "--vendor" ]; then
 else
 	CURRENT_VENDOR=$(getcurrent)
 fi
-INFO="$(readlink -f "${BASEDIR}/$CURRENT_VENDOR/apt-vendor.ent")"
+INFO="$(greadlink -f "${BASEDIR}/$CURRENT_VENDOR/apt-vendor.ent")"
 VERBATIM="${BASEDIR}/../doc/apt-verbatim.ent"
 
 if [ -z "$INFO" ] || [ ! -e "$INFO" ]; then

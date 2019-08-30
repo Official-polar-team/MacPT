@@ -156,8 +156,8 @@ APT
 
   Update
   {
-     Pre-Invoke {"touch /var/lib/apt/pre-update-stamp"; };
-     Post-Invoke {"touch /var/lib/apt/post-update-stamp"; };
+     Pre-Invoke {"touch /usr/local/var/lib/apt/pre-update-stamp"; };
+     Post-Invoke {"touch /usr/local/var/lib/apt/post-update-stamp"; };
   };
 
   /* define a new supported compressor on the fly
@@ -414,10 +414,10 @@ Dir "<DIR>"
   Bin {
      methods "<DIR>";
      methods::* "<FILE>";
-     gpg  "/usr/bin/gpgv";
+     gpg  "/usr/local/bin/gpgv";
      dpkg "<PROGRAM_PATH>";
      dpkg-source "<PROGRAM_PATH>";
-     dpkg-buildpackage "/usr/bin/dpkg-buildpackage";
+     dpkg-buildpackage "/usr/local/bin/dpkg-buildpackage";
      lz4 "<PROGRAM_PATH>";
      zstd "<PROGRAM_PATH>";
      gzip "<PROGRAM_PATH>";
