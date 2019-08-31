@@ -40,7 +40,7 @@ The first modern port of Debian's ```apt``` command line package managment inter
 
 [(Back to top)](#table-of-contents)
 
-APT is easy to use and a single thing is required to get it to work and run (More info in [flags](#flags)
+APT is easy to use and a single thing is required to get it to work and run (More info in [flags)](#flags)
 
 To execute MacPT write the command ```apt``` to display a helpfull list of all APT options
 
