@@ -48,14 +48,6 @@
 #include <string>
 #include <utility>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/error.h>
-#include <apt-pkg/progress.h>
-#endif
-#ifndef APT_10_CLEANER_HEADERS
-#include <set>
-#include <vector>
-#endif
 
 class OpProgress;
 class pkgVersioningSystem;
@@ -243,7 +235,6 @@ class pkgDepCache : protected pkgCache::Namespace
       unsigned char DepState;          // DepState Flags
 
       // Update of candidate version
-      APT_DEPRECATED_MSG("Use the method of the same name in contrib/strutl.h instead if you must") const char *StripEpoch(const char *Ver) APT_PURE;
       void Update(PkgIterator Pkg,pkgCache &Cache);
       
       // Various test members for the current status of the package
@@ -357,15 +348,12 @@ class pkgDepCache : protected pkgCache::Namespace
    inline Header &Head() {return *Cache->HeaderP;};
    inline GrpIterator GrpBegin() {return Cache->GrpBegin();};
    inline PkgIterator PkgBegin() {return Cache->PkgBegin();};
-   inline GrpIterator FindGrp(std::string const &Name) {return Cache->FindGrp(Name);};
-   inline PkgIterator FindPkg(std::string const &Name) {return Cache->FindPkg(Name);};
-   inline PkgIterator FindPkg(std::string const &Name, std::string const &Arch) {return Cache->FindPkg(Name, Arch);};
+   inline GrpIterator FindGrp(APT::StringView Name) {return Cache->FindGrp(Name);};
+   inline PkgIterator FindPkg(APT::StringView Name) {return Cache->FindPkg(Name);};
+   inline PkgIterator FindPkg(APT::StringView Name, APT::StringView Arch) {return Cache->FindPkg(Name, Arch);};
 
    inline pkgCache &GetCache() {return *Cache;};
    inline pkgVersioningSystem &VS() {return *Cache->VS;};
-
-   // Policy implementation
-   APT_DEPRECATED_MSG("Confusingly named method which returns the candidate as chosen by policy (NOT as chosen via .SetCandidateVersion!). You probably want to use .GetCandidateVersion instead.") inline VerIterator GetCandidateVer(PkgIterator const &Pkg) {return /* GetCandidateVersion(Pkg); but for API compat: */ LocalPolicy->GetCandidateVer(Pkg);};
 
    inline bool IsImportantDep(DepIterator Dep) const {return LocalPolicy->IsImportantDep(Dep);};
    inline Policy &GetPolicy() {return *LocalPolicy;};

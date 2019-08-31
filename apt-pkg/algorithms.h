@@ -16,7 +16,7 @@
 
    pkgFixBroken corrects a broken system so that it is in a sane state.
  
-   pkgAllUpgrade attempts to upgade as many packages as possible but 
+   pkgAllUpgrade attempts to upgrade as many packages as possible but
    without installing new packages.
    
    The problem resolver class contains a number of complex algorithms
@@ -38,16 +38,7 @@
 
 #include <apt-pkg/macros.h>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/acquire.h>
-using std::ostream;
-#endif
 
-#ifndef APT_9_CLEANER_HEADERS
-// include pkg{DistUpgrade,AllUpgrade,MiniizeUpgrade} here for compatibility
-#include <apt-pkg/update.h>
-#include <apt-pkg/upgrade.h>
-#endif
 
 
 class pkgSimulatePrivate;
@@ -146,8 +137,6 @@ class pkgProblemResolver						/*{{{*/
    // Try to resolve problems only by using keep
    bool ResolveByKeep(OpProgress * const Progress = NULL);
    APT_HIDDEN bool ResolveByKeepInternal();
-
-   APT_DEPRECATED_MSG("NOOP as MarkInstall enforces not overriding FromUser markings") void InstallProtect();
 
    explicit pkgProblemResolver(pkgDepCache *Cache);
    virtual ~pkgProblemResolver();

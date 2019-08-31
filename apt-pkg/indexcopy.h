@@ -17,14 +17,6 @@
 
 #include <apt-pkg/macros.h>
 
-#ifndef APT_10_CLEANER_HEADERS
-#include <apt-pkg/gpgv.h>
-class FileFd;
-#endif
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-using std::vector;
-#endif
 
 class pkgTagSection;
 class pkgCdromStatus;
@@ -115,11 +107,6 @@ class SigVerify								/*{{{*/
  public:
    bool CopyAndVerify(std::string CDROM,std::string Name,std::vector<std::string> &SigList,
 		      std::vector<std::string> PkgList,std::vector<std::string> SrcList);
-
-   APT_DEPRECATED_MSG("Use ExecGPGV instead") static bool RunGPGV(std::string const &File, std::string const &FileOut,
-		       int const &statusfd, int fd[2]);
-   APT_DEPRECATED_MSG("Use ExecGPGV instead") static bool RunGPGV(std::string const &File, std::string const &FileOut,
-			      int const &statusfd = -1);
 
    SigVerify();
    virtual ~SigVerify();

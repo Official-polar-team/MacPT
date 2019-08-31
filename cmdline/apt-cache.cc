@@ -33,7 +33,6 @@
 #include <apt-pkg/policy.h>
 #include <apt-pkg/progress.h>
 #include <apt-pkg/sourcelist.h>
-#include <apt-pkg/sptr.h>
 #include <apt-pkg/srcrecords.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/tagfile.h>
@@ -137,12 +136,12 @@ static bool DumpPackage(CommandLine &CmdL)
 /* */
 static map_pointer_t PackageNext(pkgCache::Package const * const P) { return P->NextPackage; }
 static map_pointer_t GroupNext(pkgCache::Group const * const G) { return G->Next; }
-template<class T>
-static void ShowHashTableStats(std::string Type,
-                               T *StartP,
-                               map_pointer_t *Hashtable,
-                               unsigned long Size,
-			       map_pointer_t(*Next)(T const * const))
+template <class T>
+static void ShowHashTableStats(char const *const Type,
+			       T *StartP,
+			       map_pointer_t *Hashtable,
+			       unsigned long Size,
+			       map_pointer_t (*Next)(T const *const))
 {
    // hashtable stats for the HashTable
    unsigned long NumBuckets = Size;
@@ -202,8 +201,7 @@ static bool Stats(CommandLine &CmdL)
    int NVirt = 0;
    int DVirt = 0;
    int Missing = 0;
-   pkgCache::PkgIterator I = Cache->PkgBegin();
-   for (;I.end() != true; ++I)
+   for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() != true; ++I)
    {
       if (I->VersionList != 0 && I->ProvidesList == 0)
       {
@@ -596,8 +594,8 @@ static bool XVcg(CommandLine &CmdL)
    // Load the list of packages from the command line into the show list
    APT::CacheSetHelper helper(true, GlobalError::NOTICE);
    std::list<APT::CacheSetHelper::PkgModifier> mods;
-   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::PackageSet::Modifier::POSTFIX));
-   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::PackageSet::Modifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::CacheSetHelper::PkgModifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::CacheSetHelper::PkgModifier::POSTFIX));
    std::map<unsigned short, APT::PackageSet> pkgsets =
 		APT::PackageSet::GroupedFromCommandLine(CacheFile, CmdL.FileList + 1, mods, 0, helper);
 
@@ -809,8 +807,8 @@ static bool Dotty(CommandLine &CmdL)
    // Load the list of packages from the command line into the show list
    APT::CacheSetHelper helper(true, GlobalError::NOTICE);
    std::list<APT::CacheSetHelper::PkgModifier> mods;
-   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::PackageSet::Modifier::POSTFIX));
-   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::PackageSet::Modifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(0, ",", APT::CacheSetHelper::PkgModifier::POSTFIX));
+   mods.push_back(APT::CacheSetHelper::PkgModifier(1, "^", APT::CacheSetHelper::PkgModifier::POSTFIX));
    std::map<unsigned short, APT::PackageSet> pkgsets =
 		APT::PackageSet::GroupedFromCommandLine(CacheFile, CmdL.FileList + 1, mods, 0, helper);
 

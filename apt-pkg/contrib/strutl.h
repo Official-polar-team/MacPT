@@ -20,22 +20,12 @@
 #include <limits>
 #include <string>
 #include <vector>
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
 #include <apt-pkg/string_view.h>
-#endif
 #include <stddef.h>
 #include <time.h>
 
 #include "macros.h"
 
-#ifndef APT_10_CLEANER_HEADERS
-#include <stdlib.h>
-#endif
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-using std::vector;
-using std::ostream;
-#endif
 
 namespace APT {
    namespace String {
@@ -66,7 +56,6 @@ std::string TimeToStr(unsigned long Sec);
 std::string Base64Encode(const std::string &Str);
 std::string OutputInDepth(const unsigned long Depth, const char* Separator="  ");
 std::string URItoFileName(const std::string &URI);
-APT_DEPRECATED_MSG("Specify if GMT is required or a numeric timezone can be used") std::string TimeRFC1123(time_t Date);
 /** returns a datetime string as needed by HTTP/1.1 and Debian files.
  *
  * Note: The date will always be represented in a UTC timezone
@@ -92,9 +81,9 @@ std::string TimeRFC1123(time_t Date, bool const NumericTimezone);
  *    parsing is successful, undefined otherwise.
  * @return \b true if parsing was successful, otherwise \b false.
  */
-bool RFC1123StrToTime(const char* const str,time_t &time) APT_MUSTCHECK;
+bool RFC1123StrToTime(const char* const str,time_t &time) APT_MUSTCHECK APT_PKG_590("Replaced by std::string variant");
+bool RFC1123StrToTime(const std::string &str,time_t &time) APT_MUSTCHECK;
 bool FTPMDTMStrToTime(const char* const str,time_t &time) APT_MUSTCHECK;
-APT_DEPRECATED_MSG("Use RFC1123StrToTime or FTPMDTMStrToTime as needed instead") bool StrToTime(const std::string &Val,time_t &Result);
 std::string LookupTag(const std::string &Message,const char *Tag,const char *Default = 0);
 int StringToBool(const std::string &Text,int Default = -1);
 bool ReadMessages(int Fd, std::vector<std::string> &List);
@@ -102,10 +91,7 @@ bool StrToNum(const char *Str,unsigned long &Res,unsigned Len,unsigned Base = 0)
 bool StrToNum(const char *Str,unsigned long long &Res,unsigned Len,unsigned Base = 0);
 bool Base256ToNum(const char *Str,unsigned long &Res,unsigned int Len);
 bool Base256ToNum(const char *Str,unsigned long long &Res,unsigned int Len);
-bool Hex2Num(const std::string &Str,unsigned char *Num,unsigned int Length);
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-APT_HIDDEN bool Hex2Num(const APT::StringView Str,unsigned char *Num,unsigned int Length);
-#endif
+bool Hex2Num(const APT::StringView Str,unsigned char *Num,unsigned int Length);
 // input changing string split
 bool TokSplitString(char Tok,char *Input,char **List,
 		    unsigned long ListMax);
@@ -220,8 +206,8 @@ class URI
    static std::string SiteOnly(const std::string &URI);
    static std::string ArchiveOnly(const std::string &URI);
    static std::string NoUserPassword(const std::string &URI);
-   
-   URI(std::string Path) {CopyFrom(Path);}
+
+   explicit URI(std::string Path) { CopyFrom(Path); }
    URI() : Port(0) {}
 };
 

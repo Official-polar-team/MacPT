@@ -29,12 +29,6 @@
 #include <map>
 #include <string>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
-#ifndef APT_10_CLEANER_HEADERS
-class pkgAcquire;
-#endif
 
 class pkgCacheGenerator;
 class pkgCacheListParser;
@@ -149,15 +143,6 @@ class pkgIndexFile
    virtual unsigned long Size() const = 0;
    virtual bool Merge(pkgCacheGenerator &/*Gen*/, OpProgress* const /*Prog*/) { return true; };
    virtual pkgCache::PkgFileIterator FindInCache(pkgCache &Cache) const;
-
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static bool TranslationsAvailable();
-   /* No intern need for this method anymore as the check for correctness
-      is already done in getLanguages(). Note also that this check is
-      rather bad (doesn't take three character like ast into account).*/
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static bool CheckLanguageCode(const char * const Lang);
-   /* As we have now possibly more than one LanguageCode this method is
-      superseded by a) private classmembers or b) getLanguages() */
-   APT_DEPRECATED_MSG("These methods make no sense anymore with multi-language support") static std::string LanguageCode();
 
    bool IsTrusted() const { return Trusted; };
 

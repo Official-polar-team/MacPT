@@ -81,13 +81,8 @@
 #include <stdint.h>
 #include <time.h>
 
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
 #include <apt-pkg/string_view.h>
-#endif
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
 
 // size of (potentially big) files like debs or the install size of them
 typedef uint64_t map_filesize_t;
@@ -199,11 +194,7 @@ class pkgCache								/*{{{*/
    // Memory mapped cache file
    std::string CacheFile;
    MMap &Map;
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-   APT_HIDDEN map_id_t sHash(APT::StringView S) const APT_PURE;
-#endif
-   map_id_t sHash(const std::string &S) const APT_PURE;
-   map_id_t sHash(const char *S) const APT_PURE;
+   map_id_t sHash(APT::StringView S) const APT_PURE;
    
    public:
    
@@ -220,7 +211,6 @@ class pkgCache								/*{{{*/
    Provides *ProvideP;
    Dependency *DepP;
    DependencyData *DepDataP;
-   APT_DEPRECATED_MSG("Not used anymore in cache generation and without a replacement") StringItem *StringItemP;
    char *StrP;
 
    virtual bool ReMap(bool const &Errorchecks = true);
@@ -229,11 +219,7 @@ class pkgCache								/*{{{*/
    inline void *DataEnd() {return ((unsigned char *)Map.Data()) + Map.Size();}
       
    // String hashing function (512 range)
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-   APT_HIDDEN inline map_id_t Hash(APT::StringView S) const {return sHash(S);}
-#endif
-   inline map_id_t Hash(const std::string &S) const {return sHash(S);}
-   inline map_id_t Hash(const char *S) const {return sHash(S);}
+   inline map_id_t Hash(APT::StringView S) const {return sHash(S);}
 
    APT_HIDDEN uint32_t CacheHash();
 
@@ -241,25 +227,16 @@ class pkgCache								/*{{{*/
    static const char *Priority(unsigned char Priority);
    
    // Accessors
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-   APT_HIDDEN GrpIterator FindGrp(APT::StringView Name);
-   APT_HIDDEN PkgIterator FindPkg(APT::StringView Name);
-   APT_HIDDEN PkgIterator FindPkg(APT::StringView Name, APT::StringView Arch);
-#endif
+   GrpIterator FindGrp(APT::StringView Name);
+   PkgIterator FindPkg(APT::StringView Name);
+   PkgIterator FindPkg(APT::StringView Name, APT::StringView Arch);
 
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
    APT::StringView ViewString(map_stringitem_t idx) const
    {
       char *name = StrP + idx;
       uint16_t len = *reinterpret_cast<const uint16_t*>(name - sizeof(uint16_t));
       return APT::StringView(name, len);
    }
-#endif
-
-
-   GrpIterator FindGrp(const std::string &Name);
-   PkgIterator FindPkg(const std::string &Name);
-   PkgIterator FindPkg(const std::string &Name, const std::string &Arch);
 
    Header &Head() {return *HeaderP;}
    inline GrpIterator GrpBegin();
@@ -438,11 +415,6 @@ struct pkgCache::Group
 */
 struct pkgCache::Package
 {
-   /** \brief Name of the package
-    * Note that the access method Name() will remain. It is just this data member
-    * deprecated as this information is already stored and available via the
-    * associated Group – so it is wasting precious binary cache space */
-   APT_DEPRECATED_MSG("Use the .Name() method instead of accessing the member directly") map_stringitem_t Name;
    /** \brief Architecture of the package */
    map_stringitem_t Arch;
    /** \brief Base of a singly linked list of versions
@@ -607,7 +579,6 @@ struct pkgCache::DescFile
     The version list is always sorted from highest version to lowest
     version by the generator. Equal version numbers are either merged
     or handled as separate versions based on the Hash value. */
-APT_IGNORE_DEPRECATED_PUSH
 struct pkgCache::Version
 {
    /** \brief complete version string */
@@ -629,9 +600,6 @@ struct pkgCache::Version
 		       Allowed = (1<<3), /*!< other packages are allowed to depend on thispkg:any */
 		       AllForeign = All | Foreign,
 		       AllAllowed = All | Allowed };
-
-   /** \brief deprecated variant of No */
-   static const APT_DEPRECATED_MSG("The default value of the Multi-Arch field is no, not none") VerMultiArch None = No;
 
    /** \brief stores the MultiArch capabilities of this version
 
@@ -675,7 +643,6 @@ struct pkgCache::Version
    /** \brief parsed priority value */
    map_number_t Priority;
 };
-APT_IGNORE_DEPRECATED_POP
 									/*}}}*/
 // Description structure						/*{{{*/
 /** \brief datamember of a linked list of available description for a version */
@@ -768,15 +735,6 @@ struct pkgCache::Provides
    map_pointer_t NextProvides;     // Provides
    /** \brief next provides (based of version) */
    map_pointer_t NextPkgProv;      // Provides
-};
-									/*}}}*/
-// UNUSED StringItem structure						/*{{{*/
-struct APT_DEPRECATED_MSG("No longer used in cache generation without a replacement") pkgCache::StringItem
-{
-   /** \brief string this refers to */
-   map_ptrloc String;        // StringItem
-   /** \brief Next link in the chain */
-   map_ptrloc NextItem;      // StringItem
 };
 									/*}}}*/
 

@@ -24,9 +24,6 @@
 #include <string>
 #include <sys/time.h>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-#endif
 
 class Configuration;
 class OpProgress
@@ -80,9 +77,9 @@ class OpTextProgress : public OpProgress
 
    virtual void Done() APT_OVERRIDE;
    
-   OpTextProgress(bool NoUpdate = false) : NoUpdate(NoUpdate), 
+   explicit OpTextProgress(bool NoUpdate = false) : NoUpdate(NoUpdate),
                 NoDisplay(false), LastLen(0) {};
-   OpTextProgress(Configuration &Config);
+   explicit OpTextProgress(Configuration &Config);
    virtual ~OpTextProgress() {Done();};
 };
 

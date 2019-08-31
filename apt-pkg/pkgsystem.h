@@ -40,9 +40,6 @@
 
 #include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/depcache.h>
-#endif
 
 class pkgDepCache;
 class pkgPackageManager;
@@ -86,7 +83,7 @@ class pkgSystem
    virtual bool FindIndex(pkgCache::PkgFileIterator File,
 			  pkgIndexFile *&Found) const = 0;
 
-   /* Evauluate how 'right' we are for this system based on the filesystem
+   /* Evaluate how 'right' we are for this system based on the filesystem
       etc.. */
    virtual signed Score(Configuration const &/*Cnf*/) {
       return 0;

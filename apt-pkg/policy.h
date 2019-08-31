@@ -39,9 +39,6 @@
 #include <string>
 #include <vector>
 
-#ifndef APT_8_CLEANER_HEADERS
-using std::vector;
-#endif
 
 class pkgPolicy : public pkgDepCache::Policy
 {
@@ -60,8 +57,7 @@ class pkgPolicy : public pkgDepCache::Policy
       std::string Pkg;
       explicit PkgPin(std::string const &Pkg) : Pin(), Pkg(Pkg) {};
    };
-   
-   Pin *Pins;
+
    Pin *VerPins;
    signed short *PFPriority;
    std::vector<Pin> Defaults;
@@ -74,11 +70,9 @@ class pkgPolicy : public pkgDepCache::Policy
    // Things for manipulating pins
    void CreatePin(pkgVersionMatch::MatchType Type,std::string Pkg,
 		  std::string Data,signed short Priority);
-   pkgCache::VerIterator GetMatch(pkgCache::PkgIterator const &Pkg);
 
    // Things for the cache interface.
    virtual pkgCache::VerIterator GetCandidateVer(pkgCache::PkgIterator const &Pkg) APT_OVERRIDE;
-   virtual signed short GetPriority(pkgCache::PkgIterator const &Pkg) APT_OVERRIDE;
    virtual signed short GetPriority(pkgCache::VerIterator const &Ver, bool ConsiderFiles = true) APT_OVERRIDE;
    virtual signed short GetPriority(pkgCache::PkgFileIterator const &File) APT_OVERRIDE;
 
