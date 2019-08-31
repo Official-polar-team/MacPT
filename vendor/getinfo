@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/local/bin/bash
 # small helper to extract information form *.ent files
 
 BASEDIR="$(greadlink -f "$(dirname $0)")"
@@ -32,9 +32,15 @@ getcurrent() {
 		return 0
 	fi
 
+    if dpkg-vendor --is macos; then
+	echo macos
+	return 0
+	fi
+	
 	echo debian
 	return 0
 }
+
 
 if [ "$1" = "--vendor" ]; then
 	CURRENT_VENDOR="$2"

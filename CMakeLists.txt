@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.4.0)
 include_directories(${PROJECT_BINARY_DIR}/include)
 
 
-# enable_testing()
+enable_testing()
 
 option(WITH_DOC "Build documentation." ON)
 option(USE_NLS "Localisation support." ON)
