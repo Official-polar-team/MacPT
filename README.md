@@ -44,7 +44,7 @@ APT is easy to use and a single thing is required to get it to work and run (Mor
 
 To execute MacPT write the command ```apt``` to display a helpfull list of all APT options
 
-*As a bonus you can always run ```man apt``` to get see more!*
+*As a bonus you can always run ```man apt``` to see more!*
 
 ### Flags 
 
@@ -56,8 +56,27 @@ To execute MacPT write the command ```apt``` to display a helpfull list of all A
 
 ![image]()
 
--With `Show` : Gets specific package details
+- With `Show` : Gets specific package details
 
 ![image]()
+
+- With `Install` : Installs a specific (or specifics) package with it's dependencies 
+
+![image]()
+
+- With `Reinstall` : Reinstalls a specific (or specifics) package with it's dependencies 
+
+![image]()
+
+-With `Remove` : Removes a package but it doesn't remove it's dependencies
+
+![image]()
+
+- With `Install` : Installs a specific (or specifics) package with it's dependencies 
+
+
+
+
+
 
 
