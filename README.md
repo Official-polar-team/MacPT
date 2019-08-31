@@ -9,4 +9,4 @@
 
 The first modern port of Debian's ```apt ``` command-line interface for macOS!. Here is an example of it running on macOS 10.15 (Catalina) on iTerm 2.
 
-[![Running on terminal]https://i.imgur.com/rwK4nFH.png]
+![Running on terminal](https://i.imgur.com/rwK4nFH.png)
