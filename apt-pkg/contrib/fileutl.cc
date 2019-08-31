@@ -23,10 +23,9 @@
 #include <apt-pkg/configuration.h>
 #include <apt-pkg/error.h>
 #include <apt-pkg/fileutl.h>
-#include <apt-pkg/macros.h>
 #include <apt-pkg/endian.h>
+#include <apt-pkg/macros.h>
 #include <apt-pkg/pkgsystem.h>
-#include <apt-pkg/sptr.h>
 #include <apt-pkg/strutl.h>
 
 #include <cstdio>
@@ -83,12 +82,6 @@
 #endif
 
 #include <apti18n.h>
-//posix spawn
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <spawn.h>
-#include <sys/wait.h>
 									/*}}}*/
 
 using namespace std;
@@ -96,7 +89,6 @@ using namespace std;
 /* Should be a multiple of the common page size (4096) */
 static constexpr unsigned long long APT_BUFFER_SIZE = 64 * 1024;
 
-extern char **environ;
 // RunScripts - Run a set of scripts from a configuration subtree	/*{{{*/
 // ---------------------------------------------------------------------
 /* */
@@ -172,156 +164,7 @@ bool RunScripts(const char *Cnf)
    
    return true;
 }
-#define PROC_PIDPATHINFO_MAXSIZE  (1024)
-static int file_exist(const char *filename) {
-    struct stat buffer;
-    int r = stat(filename, &buffer);
-    return (r == 0);
-}
-
-static char *searchpath(const char *binaryname){
-    if (strstr(binaryname, "/") != NULL){
-        if (file_exist(binaryname)){
-            char *foundpath = (char *)malloc((strlen(binaryname) + 1) * (sizeof(char)));
-            strcpy(foundpath, binaryname);
-            return foundpath;
-        } else {
-            return NULL;
-        }
-    }
-    
-    char *pathvar = getenv("PATH");
-    
-    char *dir = strtok(pathvar,":");
-    while (dir != NULL){
-        char searchpth[PROC_PIDPATHINFO_MAXSIZE];
-        strcpy(searchpth, dir);
-        strcat(searchpth, "/");
-        strcat(searchpth, binaryname);
-        
-        if (file_exist(searchpth)){
-            char *foundpath = (char *)malloc((strlen(searchpth) + 1) * (sizeof(char)));
-            strcpy(foundpath, searchpth);
-            return foundpath;
-        }
-        
-        dir = strtok(NULL, ":");
-    }
-    return NULL;
-}
-
-static bool isShellScript(const char *path){
-    FILE *file = fopen(path, "r");
-    uint8_t header[2];
-    if (fread(header, sizeof(uint8_t), 2, file) == 2){
-        if (header[0] == '#' && header[1] == '!'){
-            fclose(file);
-            return true;
-        }
-    }
-    fclose(file);
-    return false;
-}
-
-static char *getInterpreter(char *path){
-    FILE *file = fopen(path, "r");
-    char *interpreterLine = NULL;
-    unsigned long lineSize = 0;
-    getline(&interpreterLine, &lineSize, file);
-    
-    char *rawInterpreter = (interpreterLine+2);
-    rawInterpreter = strtok(rawInterpreter, " ");
-    rawInterpreter = strtok(rawInterpreter, "\n");
-    
-    char *interpreter = (char *)malloc((strlen(rawInterpreter)+1) * sizeof(char));
-    strcpy(interpreter, rawInterpreter);
-    
-    free(interpreterLine);
-    fclose(file);
-    return interpreter;
-}
-
-static char *fixedCmd(const char *cmdStr){
-    char *cmdCpy = (char *)malloc((strlen(cmdStr)+1) * sizeof(char));
-    strcpy(cmdCpy, cmdStr);
-    
-    char *cmd = strtok(cmdCpy, " ");
-    
-    uint8_t size = strlen(cmd) + 1;
-    
-    char *args = cmdCpy + size;
-    if ((strlen(cmdStr) - strlen(cmd)) == 0)
-        args = NULL;
-    
-    char *abs_path = searchpath(cmd);
-    if (abs_path){
-        bool isScript = isShellScript(abs_path);
-        if (isScript){
-            char *interpreter = getInterpreter(abs_path);
-            
-            uint8_t commandSize = strlen(interpreter) + 1 + strlen(abs_path);
-            
-            if (args){
-                commandSize += 1 + strlen(args);
-            }
-            
-            char *rawCommand = (char *)malloc(sizeof(char) * (commandSize + 1));
-            strcpy(rawCommand, interpreter);
-            strcat(rawCommand, " ");
-            strcat(rawCommand, abs_path);
-            
-            if (args){
-                strcat(rawCommand, " ");
-                strcat(rawCommand, args);
-            }
-            rawCommand[(commandSize)+1] = '\0';
-            
-            free(interpreter);
-            free(abs_path);
-            free(cmdCpy);
-            
-            return rawCommand;
-        } else {
-            uint8_t commandSize = strlen(abs_path);
-            
-            if (args){
-                commandSize += 1 + strlen(args);
-            }
-            
-            char *rawCommand = (char *)malloc(sizeof(char) * (commandSize + 1));
-            strcat(rawCommand, abs_path);
-            
-            if (args){
-                strcat(rawCommand, " ");
-                strcat(rawCommand, args);
-            }
-            rawCommand[(commandSize)+1] = '\0';
-            
-            free(abs_path);
-            free(cmdCpy);
-            
-            return rawCommand;
-        }
-    }
-    return cmdCpy;
-}
-
-int RunCmd(const char *cmd) {
-    pid_t pid;
-    char *rawCmd = fixedCmd(cmd);
-    char *argv[] = {"sh", "-c", (char*)rawCmd, NULL};
-    int status;
-    status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, environ);
-    if (status == 0) {
-        if (waitpid(pid, &status, 0) == -1) {
-            perror("waitpid");
-        }
-    } else {
-        printf("posix_spawn: %s\n", strerror(status));
-    }
-    free(rawCmd);
-    return status;
-}                                    /*}}}*/
+									/*}}}*/
 
 // CopyFile - Buffered copy of a file					/*{{{*/
 // ---------------------------------------------------------------------
@@ -381,6 +224,30 @@ bool RemoveFile(char const * const Function, std::string const &FileName)/*{{{*/
    is done all other calls to GetLock in any other process will fail with
    -1. The return result is the fd of the file, the call should call
    close at some time. */
+
+static std::string GetProcessName(int pid)
+{
+   struct HideError
+   {
+      int err;
+      HideError() : err(errno) { _error->PushToStack(); }
+      ~HideError()
+      {
+	 errno = err;
+	 _error->RevertToStack();
+      }
+   } hideError;
+   std::string path;
+   strprintf(path, "/proc/%d/status", pid);
+   FileFd status(path, FileFd::ReadOnly);
+   std::string line;
+   while (status.ReadLine(line))
+   {
+      if (line.substr(0, 5) == "Name:")
+	 return line.substr(6);
+   }
+   return "";
+}
 int GetLock(string File,bool Errors)
 {
    // GetLock() is used in aptitude on directories with public-write access
@@ -414,6 +281,20 @@ int GetLock(string File,bool Errors)
    {
       // always close to not leak resources
       int Tmp = errno;
+
+      if ((errno == EACCES || errno == EAGAIN))
+      {
+	 fl.l_type = F_WRLCK;
+	 fl.l_whence = SEEK_SET;
+	 fl.l_start = 0;
+	 fl.l_len = 0;
+	 fl.l_pid = -1;
+	 fcntl(FD, F_GETLK, &fl);
+      }
+      else
+      {
+	 fl.l_pid = -1;
+      }
       close(FD);
       errno = Tmp;
 
@@ -424,8 +305,21 @@ int GetLock(string File,bool Errors)
       }
   
       if (Errors == true)
-	 _error->Errno("open",_("Could not get lock %s"),File.c_str());
-      
+      {
+	 if (fl.l_pid != -1)
+	 {
+	    auto name = GetProcessName(fl.l_pid);
+	    if (name.empty())
+	       _error->Errno("open", _("Could not get lock %s. It is held by process %d"), File.c_str(), fl.l_pid);
+	    else
+	       _error->Errno("open", _("Could not get lock %s. It is held by process %d (%s)"), File.c_str(), fl.l_pid, name.c_str());
+	 }
+	 else
+	    _error->Errno("open", _("Could not get lock %s"), File.c_str());
+
+	 _error->Notice(_("Be aware that removing the lock file is not a solution and may break your system."));
+      }
+
       return -1;
    }
 
@@ -2105,7 +1999,7 @@ class APT_HIDDEN LzmaFileFdPrivate: public FileFdPrivate {				/*{{{*/
       bool eof;
       bool compressing;
 
-      LZMAFILE(FileFd * const fd) : file(nullptr), filefd(fd), eof(false), compressing(false) { buffer[0] = '\0'; }
+      explicit LZMAFILE(FileFd * const fd) : file(nullptr), filefd(fd), eof(false), compressing(false) { buffer[0] = '\0'; }
       ~LZMAFILE()
       {
 	 if (compressing == true && filefd->Failed() == false)
@@ -3175,19 +3069,6 @@ bool FileFd::FileFdError(const char *Description,...) {
    return false;
 }
 									/*}}}*/
-gzFile FileFd::gzFd() {							/*{{{*/
-#ifdef HAVE_ZLIB
-   GzipFileFdPrivate * const gzipd = dynamic_cast<GzipFileFdPrivate*>(d);
-   if (gzipd == nullptr)
-      return nullptr;
-   else
-      return gzipd->gz;
-#else
-   return nullptr;
-#endif
-}
-									/*}}}*/
-
 // Glob - wrapper around "glob()"					/*{{{*/
 std::vector<std::string> Glob(std::string const &pattern, int flags)
 {
@@ -3308,16 +3189,6 @@ bool Rename(std::string From, std::string To)				/*{{{*/
       return false;
    }
    return true;
-}
-									/*}}}*/
-bool Popen(const char* Args[], FileFd &Fd, pid_t &Child, FileFd::OpenMode Mode)/*{{{*/
-{
-   return Popen(Args, Fd, Child, Mode, true);
-}
-									/*}}}*/
-bool Popen(const char* Args[], FileFd &Fd, pid_t &Child, FileFd::OpenMode Mode, bool CaptureStderr)/*{{{*/
-{
-   return Popen(Args, Fd, Child, Mode, CaptureStderr, false);
 }
 									/*}}}*/
 bool Popen(const char *Args[], FileFd &Fd, pid_t &Child, FileFd::OpenMode Mode, bool CaptureStderr, bool Sandbox) /*{{{*/

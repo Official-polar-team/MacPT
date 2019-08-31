@@ -16,9 +16,6 @@
 
 #include <apt-pkg/macros.h>
 #include <string>
-#ifndef APT_8_CLEANER_HEADERS
-#include <apt-pkg/fileutl.h>
-#endif
 
 class FileFd;
 
@@ -44,7 +41,7 @@ class ARArchive
    const Member *FindMember(const char *Name) const;
    inline Member *Members() { return List; }
    
-   ARArchive(FileFd &File);
+   explicit ARArchive(FileFd &File);
    ~ARArchive();
 };
 

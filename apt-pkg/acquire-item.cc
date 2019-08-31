@@ -770,15 +770,13 @@ class APT_HIDDEN CleanupItem : public pkgAcqTransactionItem		/*{{{*/
 									/*}}}*/
 
 // Acquire::Item::Item - Constructor					/*{{{*/
-APT_IGNORE_DEPRECATED_PUSH
 pkgAcquire::Item::Item(pkgAcquire * const owner) :
-   FileSize(0), PartialSize(0), Mode(0), ID(0), Complete(false), Local(false),
+   FileSize(0), PartialSize(0), ID(0), Complete(false), Local(false),
     QueueCounter(0), ExpectedAdditionalItems(0), Owner(owner), d(new Private())
 {
    Owner->Add(this);
    Status = StatIdle;
 }
-APT_IGNORE_DEPRECATED_POP
 									/*}}}*/
 // Acquire::Item::~Item - Destructor					/*{{{*/
 pkgAcquire::Item::~Item()
@@ -1120,15 +1118,6 @@ bool pkgAcquire::Item::RenameOnError(pkgAcquire::Item::RenameOnErrorState const 
 void pkgAcquire::Item::SetActiveSubprocess(const std::string &subprocess)/*{{{*/
 {
       ActiveSubprocess = subprocess;
-      APT_IGNORE_DEPRECATED_PUSH
-      Mode = ActiveSubprocess.c_str();
-      APT_IGNORE_DEPRECATED_POP
-}
-									/*}}}*/
-// Acquire::Item::ReportMirrorFailure					/*{{{*/
-void pkgAcquire::Item::ReportMirrorFailure(std::string const &FailCode)
-{
-   ReportMirrorFailureToCentral(*this, FailCode, FailCode);
 }
 									/*}}}*/
 std::string pkgAcquire::Item::HashSum() const				/*{{{*/
@@ -3346,11 +3335,10 @@ pkgAcqIndex::~pkgAcqIndex() {}
 // ---------------------------------------------------------------------
 /* This just sets up the initial fetch environment and queues the first
    possibilitiy */
-APT_IGNORE_DEPRECATED_PUSH
 pkgAcqArchive::pkgAcqArchive(pkgAcquire *const Owner, pkgSourceList *const Sources,
 			     pkgRecords *const Recs, pkgCache::VerIterator const &Version,
 			     string &StoreFilename) : Item(Owner), d(NULL), LocalSource(false), Version(Version), Sources(Sources), Recs(Recs),
-						      StoreFilename(StoreFilename), Vf(),
+						      StoreFilename(StoreFilename),
 						      Trusted(false)
 {
    if (Version.Arch() == 0)
@@ -3394,7 +3382,6 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *const Owner, pkgSourceList *const Sourc
       Trusted = false;
 
    StoreFilename.clear();
-   std::set<string> targetComponents, targetCodenames, targetSuites;
    std::vector<std::unique_ptr<FileFd>> authconfs;
    for (auto Vf = Version.FileList(); Vf.end() == false; ++Vf)
    {
@@ -3539,7 +3526,6 @@ pkgAcqArchive::pkgAcqArchive(pkgAcquire *const Owner, pkgSourceList *const Sourc
    Local = false;
    QueueURI(Desc);
 }
-APT_IGNORE_DEPRECATED_POP
 									/*}}}*/
 bool pkgAcqArchive::QueueNext() /*{{{*/
 {
@@ -3865,11 +3851,10 @@ pkgAcqChangelog::~pkgAcqChangelog()					/*{{{*/
 									/*}}}*/
 
 // AcqFile::pkgAcqFile - Constructor					/*{{{*/
-APT_IGNORE_DEPRECATED_PUSH
 pkgAcqFile::pkgAcqFile(pkgAcquire *const Owner, string const &URI, HashStringList const &Hashes,
 		       unsigned long long const Size, string const &Dsc, string const &ShortDesc,
 		       const string &DestDir, const string &DestFilename,
-		       bool const IsIndexFile) : Item(Owner), d(NULL), Retries(0), IsIndexFile(IsIndexFile), ExpectedHashes(Hashes)
+		       bool const IsIndexFile) : Item(Owner), d(NULL), IsIndexFile(IsIndexFile), ExpectedHashes(Hashes)
 {
    if(!DestFilename.empty())
       DestFile = DestFilename;
@@ -3900,7 +3885,6 @@ pkgAcqFile::pkgAcqFile(pkgAcquire *const Owner, string const &URI, HashStringLis
 
    QueueURI(Desc);
 }
-APT_IGNORE_DEPRECATED_POP
 									/*}}}*/
 // AcqFile::Done - Item downloaded OK					/*{{{*/
 void pkgAcqFile::Done(string const &Message,HashStringList const &CalcHashes,

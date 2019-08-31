@@ -116,26 +116,6 @@
 	#define APT_HOT
 #endif
 
-#ifndef APT_10_CLEANER_HEADERS
-#if APT_GCC_VERSION >= 0x0300
-	#define __must_check	__attribute__ ((warn_unused_result))
-	#define __deprecated	__attribute__ ((deprecated))
-	#define __attrib_const	__attribute__ ((__const__))
-	#define __like_printf(n)	__attribute__((format(printf, n, n + 1)))
-#else
-	#define __must_check	/* no warn_unused_result */
-	#define __deprecated	/* no deprecated */
-	#define __attrib_const	/* no const attribute */
-	#define __like_printf(n)	/* no like-printf */
-#endif
-#if APT_GCC_VERSION >= 0x0403
-	#define __cold	__attribute__ ((__cold__))
-	#define __hot	__attribute__ ((__hot__))
-#else
-	#define __cold	/* no cold marker */
-	#define __hot	/* no hot marker */
-#endif
-#endif
 
 #if __GNUC__ >= 4
 	#define APT_IGNORE_DEPRECATED_PUSH \
@@ -166,8 +146,15 @@
 // Non-ABI-Breaks should only increase RELEASE number.
 // See also buildlib/libversion.mak
 #define APT_PKG_MAJOR 5
-#define APT_PKG_MINOR 0
-#define APT_PKG_RELEASE 2
+#define APT_PKG_MINOR 90
+#define APT_PKG_RELEASE 0
 #define APT_PKG_ABI ((APT_PKG_MAJOR * 100) + APT_PKG_MINOR)
+
+
+#if APT_PKG_ABI > 590
+#define APT_PKG_590(msg)  __attribute__((error(msg)))
+#else
+#define APT_PKG_590(msg)
+#endif
 
 #endif

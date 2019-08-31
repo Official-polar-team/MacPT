@@ -546,28 +546,6 @@ const char *debListParser::ConvertRelation(const char *I,unsigned int &Op)
 /* This parses the dependency elements out of a standard string in place,
    bit by bit. */
 const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-               std::string &Package,std::string &Ver,unsigned int &Op)
-   { return ParseDepends(Start, Stop, Package, Ver, Op, false, true, false); }
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-               std::string &Package,std::string &Ver,unsigned int &Op,
-               bool const &ParseArchFlags)
-   { return ParseDepends(Start, Stop, Package, Ver, Op, ParseArchFlags, true, false); }
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-               std::string &Package,std::string &Ver,unsigned int &Op,
-               bool const &ParseArchFlags, bool const &StripMultiArch)
-   { return ParseDepends(Start, Stop, Package, Ver, Op, ParseArchFlags, StripMultiArch, false); }
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-					string &Package,string &Ver,
-					unsigned int &Op, bool const &ParseArchFlags,
-					bool const &StripMultiArch,
-					bool const &ParseRestrictionsList)
-{
-   return debListParser::ParseDepends(Start, Stop, Package, Ver, Op, ParseArchFlags,
-                                      StripMultiArch, ParseRestrictionsList,
-                                      _config->Find("APT::Architecture"));
-}
-
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
 					string &Package,string &Ver,
 					unsigned int &Op, bool const &ParseArchFlags,
 					bool const &StripMultiArch,
@@ -584,23 +562,15 @@ const char *debListParser::ParseDepends(const char *Start,const char *Stop,
 
    return res;
 }
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-					StringView &Package,StringView &Ver,
-					unsigned int &Op, bool ParseArchFlags,
-					bool StripMultiArch,
-					bool ParseRestrictionsList)
-{
-   return debListParser::ParseDepends(Start, Stop, Package, Ver, Op, ParseArchFlags,
-                                      StripMultiArch, ParseRestrictionsList,
-                                      _config->Find("APT::Architecture"));
-}
 
-const char *debListParser::ParseDepends(const char *Start,const char *Stop,
-					StringView &Package,StringView &Ver,
+const char *debListParser::ParseDepends(const char *Start, const char *Stop,
+					StringView &Package, StringView &Ver,
 					unsigned int &Op, bool ParseArchFlags,
 					bool StripMultiArch,
-					bool ParseRestrictionsList, string const &Arch)
+					bool ParseRestrictionsList, string Arch)
 {
+   if (Arch.empty())
+      Arch = _config->Find("APT::Architecture");
    // Strip off leading space
    for (;Start != Stop && isspace_ascii(*Start) != 0; ++Start);
    
@@ -850,7 +820,8 @@ bool debListParser::ParseDepends(pkgCache::VerIterator &Ver,
 
       Start = ParseDepends(Start, Stop, Package, Version, Op, false, false, false, myArch);
       if (Start == 0)
-	 return _error->Error("Problem parsing dependency %zu",static_cast<size_t>(Key)); // TODO
+	 return _error->Error("Problem parsing dependency %zu of %s:%s=%s", static_cast<size_t>(Key), // TODO
+			      Ver.ParentPkg().Name(), Ver.Arch(), Ver.VerStr());
       size_t const found = Package.rfind(':');
 
       if (found == string::npos)
@@ -918,9 +889,9 @@ bool debListParser::ParseProvides(pkgCache::VerIterator &Ver)
 	 Start = ParseDepends(Start,Stop,Package,Version,Op, false, false, false);
 	 const size_t archfound = Package.rfind(':');
 	 if (Start == 0)
-	    return _error->Error("Problem parsing Provides line");
+	    return _error->Error("Problem parsing Provides line of %s:%s=%s", Ver.ParentPkg().Name(), Ver.Arch(), Ver.VerStr());
 	 if (unlikely(Op != pkgCache::Dep::NoOp && Op != pkgCache::Dep::Equals)) {
-	    _error->Warning("Ignoring Provides line with non-equal DepCompareOp for package %s", Package.to_string().c_str());
+	    _error->Warning("Ignoring non-equal Provides for package %s in %s:%s=%s", Package.to_string().c_str(), Ver.ParentPkg().Name(), Ver.Arch(), Ver.VerStr());
 	 } else if (archfound != string::npos) {
 	    StringView spzArch = Package.substr(archfound + 1);
 	    if (spzArch != "any")

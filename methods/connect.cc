@@ -262,7 +262,7 @@ static std::vector<struct addrinfo *> OrderAddresses(struct addrinfo *CurHost)
 	 allAddrs.push_back(*otherIter++);
    }
 
-   return std::move(allAddrs);
+   return allAddrs;
 }
 									/*}}}*/
 // Check for errors and report them					/*{{{*/
@@ -893,7 +893,7 @@ struct TlsFd : public MethodFd
    }
 };
 
-ResultState UnwrapTLS(std::string Host, std::unique_ptr<MethodFd> &Fd,
+ResultState UnwrapTLS(std::string const &Host, std::unique_ptr<MethodFd> &Fd,
 		      unsigned long Timeout, aptMethod *Owner)
 {
    if (_config->FindB("Acquire::AllowTLS", true) == false)

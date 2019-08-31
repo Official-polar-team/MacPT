@@ -11,21 +11,10 @@
 
 #include <cstring>
 #include <string>
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
 #include <apt-pkg/string_view.h>
-#endif
 
 #include <apt-pkg/strutl.h>
 
-#ifndef APT_10_CLEANER_HEADERS
-#include <apt-pkg/fileutl.h>
-#include <algorithm>
-#include <stdint.h>
-#endif
-#ifndef APT_8_CLEANER_HEADERS
-using std::string;
-using std::min;
-#endif
 
 class FileFd;
 
@@ -77,17 +66,10 @@ class HashSumValue
       return Value();
    }
 
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-   APT_HIDDEN bool Set(APT::StringView Str)
+   bool Set(APT::StringView Str)
    {
       return Hex2Num(Str,Sum,sizeof(Sum));
    }
-#else
-   bool Set(std::string Str)
-   {
-      return Hex2Num(Str,Sum,sizeof(Sum));
-   }
-#endif
    inline void Set(unsigned char S[N/8])
    {
       for (int I = 0; I != sizeof(Sum); ++I)
@@ -99,8 +81,7 @@ class HashSumValue
          memset(Sum,0,sizeof(Sum));
          Set(Str);
    }
-#ifdef APT_PKG_EXPOSE_STRING_VIEW
-   APT_HIDDEN explicit HashSumValue(APT::StringView const &Str)
+   explicit HashSumValue(APT::StringView const &Str)
    {
          memset(Sum,0,sizeof(Sum));
          Set(Str);
@@ -110,7 +91,6 @@ class HashSumValue
          memset(Sum,0,sizeof(Sum));
          Set(Str);
    }
-#endif
    HashSumValue()
    {
       memset(Sum,0,sizeof(Sum));

@@ -1,3 +1,95 @@
+apt (1.9.3) experimental; urgency=medium
+
+  * Fix segfault in pkgAcquire::Enqueue() with Acquire::Queue-Mode=access
+    (LP: #1839714)
+  * test: Use valgrind to ensure Acquire::Queue-Mode=access does not crash
+  * Add initial support for package patterns (patterns on versions WIP)
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 19 Aug 2019 16:21:20 +0200
+
+apt (1.9.2) experimental; urgency=medium
+
+  [ Julian Andres Klode ]
+  * Improve locking messaging - pid and name, "do not remove lock file"
+
+  [ Lynn Cyrin ]
+  * Change a pronoun in the readme from `he` to `they`
+
+  [ David Kalnischkies ]
+  * Distribute host-less work based on backlog of the queues
+  * Show details about the package with bad Provides
+  * Apply various suggestions by cppcheck
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 05 Aug 2019 21:26:10 +0200
+
+apt (1.9.1) experimental; urgency=medium
+
+  * RFC1123StrToTime: Accept const std::string& as first argument
+  * Fix pkg-config-test autopkgtest
+
+ -- Julian Andres Klode <jak@debian.org>  Thu, 20 Jun 2019 17:53:14 +0200
+
+apt (1.9.0) experimental; urgency=medium
+
+  [ Julian Andres Klode ]
+  * CMakeLists.txt: Bump C++ standard version to C++14
+  * debian: Update to debhelper-compat (= 12)
+  * debian/rules: Do not use dh_install --list-missing (dh 12 porting)
+  * Remove all the deprecated bits, merge various function prototypes together
+  * prepare-release: Add merge-translations command
+  * Use system-provided triehash
+  * CI: Use unstable for now, as we need triehash package
+  * Tighten dependencies from apt and apt-utils on libs
+  * Add test case for local-only packages pinned to never
+  * acq: worker: Move CurrentSize, TotalSize, ResumePoint to CurrentItem
+  * apt-helper: Support multiple hashes for a file
+  * Add 'explicit' to most single argument constructors
+  * Get rid of pkgExtract and pkgFLCache
+  * Merge libapt-inst into libapt-pkg
+  * Use debDebFile to get control file instead of dpkg-deb
+  * prepare-release: Add bump-abi command
+  * Change soname to libapt-pkg.so.5.90
+  * CMake: Enforce "override" use on overridden methods
+  * debmetaindex: Use isspace_ascii() variant to normalize Signed-By
+  * README.md: Quote -j <count> as code with backticks
+  * apt-mark: Add hidden showheld alias for showhold
+  * Mnor wording improvements in documentation
+  * Make APT::StringView public, replace std::string with it in various places
+  * Introduce apt satisfy and apt-get satisfy (Closes: #275379)
+  * Run unifdef -DAPT_{8,9,10,15}_CLEANER_HEADERS
+  * Adjust code for missing includes, and using std::string
+  * Bump cache MajorVersion to 16
+
+  [ Corentin Noël ]
+  * Add pkg-config files for the apt-pkg and apt-inst libraries
+    (Closes: #439121)
+
+  [ Simon McVittie ]
+  * vendor/getinfo: Iterate through vendors in lexicographic order
+    (Closes: #924662)
+  * vendor/getinfo: Don't assume that Ubuntu is the last vendor
+    (Closes: #924662)
+
+  [ Martin Michlmayr ]
+  * Perform minor copy-editing on the docs
+
+  [ Ivan Krylov ]
+  * Mark apt-transport-https as M-A:foreign (Closes: #905141)
+
+  [ David Kalnischkies ]
+  * Don't limit cpu-limited queues to at most 10
+
+  [ Stephen Kitt ]
+  * apt-cache: only show solutions if displayed
+
+  [ Brian Murray ]
+  * Do not include squashfs file systems in df output. (LP: #1756595)
+
+  [ Simon Körner ]
+  * http: Fix Host header in proxied https connections
+
+ -- Julian Andres Klode <jak@debian.org>  Mon, 17 Jun 2019 11:36:56 +0200
+
 apt (1.8.2) unstable; urgency=medium
 
   [ Alwin Henseler ]
@@ -3450,7 +3542,7 @@ apt (0.9.14.3~exp4) experimental; urgency=medium
     - add Description tag for deb822 sources
     - add support for Enabled: no in deb822 sources.list
     - add support for multiple URIs in deb822 style sources.list
-    - add support for multipl types in one line
+    - add support for multiple types in one line
   * add integration test for apt search and apt show
   * do not ignore ioctl(TIOCSCTTY) errors
 

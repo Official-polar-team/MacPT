@@ -35,8 +35,8 @@ namespace APT {
 // setDefaultConfigurationForCompressors				/*{{{*/
 static void setDefaultConfigurationForCompressors() {
 	// Set default application paths to check for optional compression types
-	_config->CndSet("Dir::Bin::gzip", "/usr/bin/gzip");
-	_config->CndSet("Dir::Bin::bzip2", "/usr/bin/bzip2");
+	_config->CndSet("Dir::Bin::gzip", "/usr/local/bin/gzip");
+	_config->CndSet("Dir::Bin::bzip2", "/usr/local/bin/bzip2");
 	_config->CndSet("Dir::Bin::xz", "/usr/local/bin/xz");
 	_config->CndSet("Dir::Bin::lz4", "/usr/local/bin/lz4");
 	_config->CndSet("Dir::Bin::zstd", "/usr/local/bin/zstd");

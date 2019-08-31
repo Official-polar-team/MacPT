@@ -49,7 +49,6 @@
 #include <apt-pkg/pkgsystem.h>
 #include <apt-pkg/progress.h>
 #include <apt-pkg/sourcelist.h>
-#include <apt-pkg/sptr.h>
 #include <apt-pkg/srcrecords.h>
 #include <apt-pkg/strutl.h>
 #include <apt-pkg/upgrade.h>
@@ -149,8 +148,7 @@ static bool DoDSelectUpgrade(CommandLine &)
    pkgDepCache::ActionGroup group(Cache);
 
    // Install everything with the install flag set
-   pkgCache::PkgIterator I = Cache->PkgBegin();
-   for (;I.end() != true; ++I)
+   for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() != true; ++I)
    {
       /* Install the package only if it is a new install, the autoupgrader
          will deal with the rest */
@@ -160,7 +158,7 @@ static bool DoDSelectUpgrade(CommandLine &)
 
    /* Now install their deps too, if we do this above then order of
       the status file is significant for | groups */
-   for (I = Cache->PkgBegin();I.end() != true; ++I)
+   for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() != true; ++I)
    {
       /* Install the package only if it is a new install, the autoupgrader
          will deal with the rest */
@@ -169,7 +167,7 @@ static bool DoDSelectUpgrade(CommandLine &)
    }
    
    // Apply erasures now, they override everything else.
-   for (I = Cache->PkgBegin();I.end() != true; ++I)
+   for (pkgCache::PkgIterator I = Cache->PkgBegin(); I.end() != true; ++I)
    {
       // Remove packages 
       if (I->SelectedState == pkgCache::State::DeInstall ||
@@ -417,6 +415,7 @@ static std::vector<aptDispatchWithHelp> GetCommands()			/*{{{*/
       {"full-upgrade", &DoDistUpgrade, nullptr},
       {"dselect-upgrade", &DoDSelectUpgrade, _("Follow dselect selections")},
       {"build-dep", &DoBuildDep, _("Configure build-dependencies for source packages")},
+      {"satisfy", &DoBuildDep, _("Satisfy dependency strings")},
       {"clean", &DoClean, _("Erase downloaded archive files")},
       {"autoclean", &DoAutoClean, _("Erase old downloaded archive files")},
       {"auto-clean", &DoAutoClean, nullptr},
