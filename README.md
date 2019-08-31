@@ -17,19 +17,18 @@ The first modern port of Debian's ```apt``` command line package managment inter
 
 - [Usage](#usage)
   - [Flags](#flags)
-    - `-1`
-    - `-a`   (or) `--all`
-    - `-A`   (or) `--almost-all`
-    - `-d`   (or) `--dirs`
-    - `-f`   (or) `--files`
-    - `-h`   (or) `--help`
-    - `-l`   (or) `--long`
-    - `-r`   (or) `--report`
-    - `--tree` (or) `--tree=[DEPTH]`
-    - `--gs` (or) `--git-status`
-    - `--sd` (or) `--sort-dirs` or `--group-directories-first`
-    - `--sf` (or) `--sort-files`
-    - `-t`
+    - `List`
+    - `Search`
+    - `Show`
+    - `Install` 
+    - `Reinstall`
+    - `Remove` 
+    - `Autoremove`
+    - `Update` 
+    - `Upgrade``
+    - `Full-upgrade`
+    - `Edit-Sources`
+
 - [Installation](#installation)
 - [Updating](#updating)
 - [Uninstallation](#uninstallation)
@@ -41,7 +40,7 @@ The first modern port of Debian's ```apt``` command line package managment inter
 
 [(Back to top)](#table-of-contents)
 
-APT is easy to use and a single thing is required to get it to work and run (More info in flags)
+APT is easy to use and a single thing is required to get it to work and run (More info in [flags](#flags)
 
 To execute MacPT write the command ```apt``` to display a helpfull list of all APT options
 
