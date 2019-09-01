@@ -1,0 +1,17 @@
+Package: apt-utils
+Source: apt
+Version: 
+Architecture: darwin-amd64
+Maintainer: Serna Development Team
+Depends: apt (= 1.9.3), libapt-pkg5.90 (>= 1.9~), libdb18.1
+Section: admin
+Priority: important
+Description: package management related utility programs
+ This package contains some less used commandline utilities related
+ to package management with APT.
+ .
+  * apt-extracttemplates is used by debconf to prompt for configuration
+    questions before installation.
+  * apt-ftparchive is used to create Packages and other index files
+    needed to publish an archive of Debian packages
+  * apt-sortpkgs is a Packages/Sources file normalizer.

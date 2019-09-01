@@ -1,32 +1,47 @@
 #!/bin/zsh
 cd "${0%/*}"
 rm -rf build
-mkdir -p build/_/DEBIAN build/__/DEBIAN build/__/usr/local/lib build/___/DEBIAN build/___/usr/local/lib
+mkdir -p build/_/DEBIAN build/__/DEBIAN build/___/DEBIAN build/____/DEBIAN build/_____/DEBIAN build/______/DEBIAN
 cd build
 cmake ..
 make -j8 install DESTDIR=_
-for f in `find ./_/usr/local/lib -name 'libapt-pkg.5*'`
-do
-mv $f ./__/usr/local/lib
-done
-for f in `find ./_/usr/local/lib -name 'libapt-pkg*'`
-do
-mv $f ./___/usr/local/lib
-done
+
+rsync -av --include '*/' --include 'libapt-pkg*5*' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./__/
+
+mkdir -p ./___/usr/local/lib/; mv ./_/usr/local/lib/libapt-pkg.dylib $_
 mv ./_/usr/local/lib/pkgconfig ./___/usr/local/lib/pkgconfig
 mv ./_/usr/local/include ./___/usr/local/include
+
+rsync -av --include '*/' --include 'apt-utils.mo' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./____/
+mkdir -p ./____/usr/local/share/doc/; mv ./_/usr/local/share/doc/apt-utils $_
+rsync -av --include '*/' --include 'apt-ftparchive*' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./____/
+rsync -av --include '*/' --include 'apt-sortpkgs*' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./____/
+rsync -av --include '*/' --include 'apt-extracttemplates*' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./____/
+
+mkdir -p ./_____/usr/local/share/doc/; mv ./_/usr/local/share/doc/apt-doc $_
+
+mkdir -p ./______/usr/local/share/doc/; mv ./_/usr/local/share/doc/libapt-pkg-doc $_
+
 find . -name '.DS_Store' -type f -delete
 cd ../macos
 ./control.sh apt.control ../build/_ > ../build/_/DEBIAN/control
 ./control.sh libapt-pkg.control ../build/__ > ../build/__/DEBIAN/control
 ./control.sh libapt-pkg-dev.control ../build/___ > ../build/___/DEBIAN/control
+./control.sh apt-utils.control ../build/____ > ../build/____/DEBIAN/control
+./control.sh apt-doc.control ../build/_____ > ../build/_____/DEBIAN/control
+./control.sh libapt-pkg-doc.control ../build/______ > ../build/______/DEBIAN/control
 cp apt.postinst ../build/_/DEBIAN/postinst
 cp apt.postrm ../build/_/DEBIAN/postrm
 cd ../build
-chmod 0755 _/DEBIAN _/DEBIAN/* __/DEBIAN __/DEBIAN/* ___/DEBIAN ___/DEBIAN/*
 dpkg-deb -b _
 dpkg-deb -b __
 dpkg-deb -b ___
+dpkg-deb -b ____
+dpkg-deb -b _____
+dpkg-deb -b ______
 cp _.deb ../apt_"$(../macos/version.sh)"_darwin-amd64.deb
 cp __.deb ../libapt-pkg5.90_"$(../macos/version.sh)"_darwin-amd64.deb
 cp ___.deb ../libapt-pkg-dev_"$(../macos/version.sh)"_darwin-amd64.deb
+cp ____.deb ../apt-utils_"$(../macos/version.sh)"_darwin-amd64.deb
+cp _____.deb ../apt-doc_"$(../macos/version.sh)"_all.deb
+cp ______.deb ../libapt-pkg-doc_"$(../macos/version.sh)"_all.deb
