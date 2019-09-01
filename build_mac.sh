@@ -39,9 +39,10 @@ dpkg-deb -b ___
 dpkg-deb -b ____
 dpkg-deb -b _____
 dpkg-deb -b ______
-cp _.deb ../apt_"$(../macos/version.sh)"_darwin-amd64.deb
-cp __.deb ../libapt-pkg5.90_"$(../macos/version.sh)"_darwin-amd64.deb
-cp ___.deb ../libapt-pkg-dev_"$(../macos/version.sh)"_darwin-amd64.deb
-cp ____.deb ../apt-utils_"$(../macos/version.sh)"_darwin-amd64.deb
-cp _____.deb ../apt-doc_"$(../macos/version.sh)"_all.deb
-cp ______.deb ../libapt-pkg-doc_"$(../macos/version.sh)"_all.deb
+mkdir -p ../debs
+mv _.deb ../debs/apt_"$(../macos/version.sh)"_darwin-amd64.deb
+mv __.deb ../debs/libapt-pkg5.90_"$(../macos/version.sh)"_darwin-amd64.deb
+mv ___.deb ../debs/libapt-pkg-dev_"$(../macos/version.sh)"_darwin-amd64.deb
+mv ____.deb ../debs/apt-utils_"$(../macos/version.sh)"_darwin-amd64.deb
+mv _____.deb ../debs/apt-doc_"$(../macos/version.sh)"_all.deb
+mv ______.deb ../debs/libapt-pkg-doc_"$(../macos/version.sh)"_all.deb
