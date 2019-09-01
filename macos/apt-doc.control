@@ -1,0 +1,9 @@
+Package: apt-doc
+Version: 
+Architecture: all
+Maintainer: Serna Development Team
+Section: doc
+Priority: optional
+Description: documentation for APT
+ This package contains the user guide and offline guide for various
+ APT tools which are provided in a html and a text-only version.
