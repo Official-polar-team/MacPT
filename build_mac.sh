@@ -3,7 +3,7 @@ cd "${0%/*}"
 rm -rf build
 mkdir -p build/_/DEBIAN build/__/DEBIAN build/___/DEBIAN build/____/DEBIAN build/_____/DEBIAN build/______/DEBIAN
 cd build
-cmake ..
+cmake -DCMAKE_OSX_SYSROOT=macosx -DCMAKE_OSX_DEPLOYMENT_TARGET=10.10 ..
 make -j8 install DESTDIR=_
 
 rsync -av --include '*/' --include 'libapt-pkg*5*' --exclude '*' --prune-empty-dirs --remove-source-files ./_/ ./__/
