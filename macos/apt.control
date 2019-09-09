@@ -3,7 +3,7 @@ Version:
 Architecture: darwin-amd64
 Maintainer: Serna Development Team
 Recommends: ca-certificates
-Depends: gettext, gnupg, libapt-pkg5.90 (>= 1.9.3), libgnutls30 (>= 3.6.6), serna-archive-keyring, dpkg
+Depends: gpgv, libapt-pkg5.90 (>= 1.9.3), libgnutls30 (>= 3.6.6), serna-archive-keyring, dpkg
 Suggests: apt-doc, aptitude | synaptic | wajig, dpkg-dev (>= 1.17.2), gnupg | gnupg2 | gnupg1, powermgmt-base
 Breaks: apt-transport-https (<< 1.5~alpha4~), apt-utils (<< 1.3~exp2~), aptitude (<< 0.8.10)
 Replaces: apt-transport-https (<< 1.5~alpha4~), apt-utils (<< 1.3~exp2~)
